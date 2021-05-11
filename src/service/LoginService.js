@@ -95,7 +95,8 @@ export default class LoginSevice {
          localStorage.removeItem('user');
          localStorage.removeItem('sonGunSonu');
          localStorage.removeItem('firma');
-          // window.location.href = "http://localhost:3000/";
+
+        // window.location.href = "http://localhost:3000/";
          window.location.href = URL;
 
        });
@@ -116,9 +117,11 @@ export default class LoginSevice {
       localStorage.removeItem('sonGunSonu');
       localStorage.removeItem('firma');
       console.log('LOGOUT :', jsonData);
-      const res = apiClient.post('/user/logout', JSON.stringify(jsonData));
-      // window.location.href = "http://localhost:3000/";
-      window.location.href =URL;
+
+      const res = apiClient.post('/user/logout',(jsonData));
+
+       window.location.href = "http://localhost:3000/";
+      //window.location.href =URL;
       return res;
    }
 

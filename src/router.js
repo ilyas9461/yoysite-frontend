@@ -18,6 +18,11 @@ const routes = [
         props:true ,
     },
     {
+        path:'/gunsonulistele',
+        name:'gunsonulistele',
+        component:() => import('./pages/GunSonuListele.vue')
+    },
+    {
         path: '/table',
         name: 'table',
         component: () => import('./components/TableDemo.vue'),

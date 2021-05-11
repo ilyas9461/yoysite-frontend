@@ -124,6 +124,86 @@ export default {
       menu: [
         { label: "Ana Sayfa", icon: "pi pi-fw pi-home", to: "/" },
         {
+          label: "Listeler",
+          icon: "pi pi-fw pi-sitemap",
+          items: [
+            {
+              label: "Haftalık",
+              icon: "pi pi-fw pi-id-card",
+              // to: "/formlayout",
+               items:[
+                {
+                  label: "Gun Sonu",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/gunsonulistele",
+
+                },
+                {
+                  label: "Masraf",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/empty",
+                },
+                {
+                  label: "Banka/Elden",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/empty",
+                }
+              ]
+            },
+            { 
+              label: "Aylık", 
+              icon: "pi pi-fw pi-check-square", 
+              // to: "/input" ,
+              items:[
+                {
+                  label: "Gun Sonu",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/gunsonulistele",
+
+                },
+                {
+                  label: "Masraf",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/empty",
+                },
+                {
+                  label: "Banka/Elden",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/empty",
+                },
+                {
+                  label: "Misafir Sayısı",
+                  icon: "pi pi-fw pi-circle-off",
+                  to: "/empty",
+                }
+              ]
+            },
+            {
+              label: "Tarih Aralıklı",
+              icon: "pi pi-fw pi-bookmark",
+              to: "/floatlabel",
+
+            },
+            // {
+            //   label: "Invalid State",
+            //   icon: "pi pi-fw pi-exclamation-circle",
+            //   to: "invalidstate",
+            // },
+            // { label: "Button", icon: "pi pi-fw pi-mobile", to: "/button" },
+            // { label: "Table", icon: "pi pi-fw pi-table", to: "/table" },
+            // { label: "List", icon: "pi pi-fw pi-list", to: "/list" },
+            // { label: "Tree", icon: "pi pi-fw pi-share-alt", to: "/tree" },
+            // { label: "Panel", icon: "pi pi-fw pi-tablet", to: "/panel" },
+            // { label: "Overlay", icon: "pi pi-fw pi-clone", to: "/overlay" },
+            // { label: "Menu", icon: "pi pi-fw pi-bars", to: "/menu" },
+            // { label: "Message", icon: "pi pi-fw pi-comment", to: "/messages" },
+            // { label: "File", icon: "pi pi-fw pi-file", to: "/file" },
+            // { label: "Chart", icon: "pi pi-fw pi-chart-bar", to: "/chart" },
+            // { label: "Misc", icon: "pi pi-fw pi-circle-off", to: "/misc" },
+          ],
+        },
+        
+        {
           label: "Veri Analizi",
           icon: "pi pi-fw pi-clone",
           items: [
@@ -168,39 +248,7 @@ export default {
             },
           ],
         },
-        {
-          label: "Listeler",
-          icon: "pi pi-fw pi-sitemap",
-          items: [
-            {
-              label: "Haftalık",
-              icon: "pi pi-fw pi-id-card",
-              to: "/formlayout",
-            },
-            { label: "Aylık", icon: "pi pi-fw pi-check-square", to: "/input" },
-            {
-              label: "Tarih Aralıklı",
-              icon: "pi pi-fw pi-bookmark",
-              to: "/floatlabel",
-            },
-            // {
-            //   label: "Invalid State",
-            //   icon: "pi pi-fw pi-exclamation-circle",
-            //   to: "invalidstate",
-            // },
-            // { label: "Button", icon: "pi pi-fw pi-mobile", to: "/button" },
-            // { label: "Table", icon: "pi pi-fw pi-table", to: "/table" },
-            // { label: "List", icon: "pi pi-fw pi-list", to: "/list" },
-            // { label: "Tree", icon: "pi pi-fw pi-share-alt", to: "/tree" },
-            // { label: "Panel", icon: "pi pi-fw pi-tablet", to: "/panel" },
-            // { label: "Overlay", icon: "pi pi-fw pi-clone", to: "/overlay" },
-            // { label: "Menu", icon: "pi pi-fw pi-bars", to: "/menu" },
-            // { label: "Message", icon: "pi pi-fw pi-comment", to: "/messages" },
-            // { label: "File", icon: "pi pi-fw pi-file", to: "/file" },
-            // { label: "Chart", icon: "pi pi-fw pi-chart-bar", to: "/chart" },
-            // { label: "Misc", icon: "pi pi-fw pi-circle-off", to: "/misc" },
-          ],
-        },
+       
         {
           label: "Araçlar",
           icon: "pi pi-fw pi-globe",
