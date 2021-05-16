@@ -104,7 +104,10 @@
       </Fieldset>
     </Fieldset>
   </div>
-  <div v-else>Yükleniyor...Dash Board</div>
+  <div class="card" style="text-align:center" v-else>
+    <span class="pi pi-spin pi-spinner" style="fontSize: 2.5rem"></span> 
+    <span style="fontSize: 1.5rem"> Yükleniyor...</span>
+  </div>
 </template>
 
 <script>

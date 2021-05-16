@@ -40,11 +40,11 @@
           sortable
         >
         </Column>
-        <Column
+        <!-- <Column
         field="tur"
           header="Çıkış Tür"
         >
-        </Column>
+        </Column> -->
         <Column
           field="cesit"
           header="Çıkış Çeşit"

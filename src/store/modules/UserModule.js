@@ -1,4 +1,5 @@
-// import LoginSevice from "../../service/LoginService";
+ import DataService from "../../service/DataService";
+ const dataService=new DataService();
 
 // initial state
 const state = () => ({
@@ -43,6 +44,7 @@ const actions = {
   // },
   userReset({commit}) {
     commit('SET_USER', null);
+    dataService.deleteLocalStorageData();
   },
   setUserData({commit},data){
     //console.log('USER DATA : ',data);

@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const URL='http://157.230.229.168:3000'; //digital ocean ubuntu server
 //const URL='http://localhost:3000';
+
 //const URL = "http://192.168.1.124:3000";
-const URL='/api';  //vue.config.js dosyasındaki devServer,  proxy ayarlarında belirtilmiştir.
+//const URL='/api';  //vue.config.js dosyasındaki devServer,  proxy ayarlarında belirtilmiştir.
 
 // const apiClient = axios.create({
 //   baseURL: URL,
@@ -21,6 +23,13 @@ export default class DataService {
     return true;
   }
 
+  deleteLocalStorageData(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('sonGunSonu');
+    localStorage.removeItem('firma');
+  }
+
   authHeader() {
     let token = (localStorage.getItem("token"));
     //console.log("authHeader() :", token);
@@ -30,6 +39,31 @@ export default class DataService {
       token: token, //string gönderilir alındığı yerde JSON.parse ile çevrilmeli.
     };
     return header;
+  }
+
+  async getAylikGunSonu(dataUser){
+    const jsonData = JSON.stringify(dataUser);
+    // const res = await apiClient.post('/gunsonu/songunsonu', jsonData);
+    const res = await axios.post(URL + "/gunsonu", jsonData, {
+      headers: this.authHeader(),
+    }).catch(function (error) {
+      if (error.response) {
+        //   console.log('Error User: ',error.response.data);
+        //   console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+      this.deleteLocalStorageData();
+      // window.location.href = "http://localhost:3000/";
+      window.location.href = URL;
+
+    });
+
+
+    localStorage.setItem('AylikGunSonu', JSON.stringify(res.data));
+
+    // console.log('DaTA Srevis:', JSON.parse(localStorage.getItem('sonGunSonu')));
+
+    return res; //dönen veri  object tir.
   }
 
   // const sorgu = {
@@ -48,12 +82,8 @@ export default class DataService {
         //   console.log('Error User: ',error.response.data);
         //   console.log(error.response.status);
         console.log(error.response.headers);
-
       }
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('sonGunSonu');
-      localStorage.removeItem('firma');
+      this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -86,10 +116,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('sonGunSonu');
-      localStorage.removeItem('firma');
+      this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -109,10 +136,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('sonGunSonu');
-      localStorage.removeItem('firma');
+      this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -131,10 +155,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('sonGunSonu');
-      localStorage.removeItem('firma');
+      this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
