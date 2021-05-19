@@ -1,60 +1,66 @@
-const data = [{
-  "sonGunSonu": {
-    "id": 11,
-    "firma_web_id": 45,
-    "toplam_satis": 635,
-    "toplam_islem": 0,
-    "toplam_ciro": 635,
-    "nakit_para_tutar": 580,
-    "kredi_karti_tutar": 0,
+const data = [
+  [{
+    "id": 14,
+    "firma_web_id": 46,
+    "toplam_satis": 0,
+    "toplam_islem": 395,
+    "toplam_ciro": 395,
+    "nakit_para_tutar": 150,
+    "kredi_karti_tutar": 200,
     "banka_tutar": 0,
-    "masraf_tutar": 0,
-    "gunluk_kasa": 580,
-    "devreden_miktar": 580,
-    "fark": -205,
-    "tarih": "2021-04-27 19:56:16",
+    "masraf_tutar": 45,
+    "gunluk_kasa": 150,
+    "devreden_miktar": 150,
+    "fark": 0,
+    "tarih": "2021-05-14 11:36:53",
     "kasiyer_devreden": "k2",
     "kasiyer_devralan": "",
-    "varsa_not": "jhjh",
+    "varsa_not": "NOT:",
     "islem_tur": "GUN SONU",
     "web_kayit": 1,
-    "picc_stok": 0
-  },
-  "anlikGunSonu": [{
-    "ad": "Toplam Nakit TL",
-    "deger": 80
+    "picc_stok": 983
   }, {
-    "ad": "Toplam KKartı  TL",
-    "deger": 50
+    "id": 15,
+    "firma_web_id": 46,
+    "toplam_satis": 225,
+    "toplam_islem": 595,
+    "toplam_ciro": 820,
+    "nakit_para_tutar": 170,
+    "kredi_karti_tutar": 352,
+    "banka_tutar": 550,
+    "masraf_tutar": 100,
+    "gunluk_kasa": 1172,
+    "devreden_miktar": 170,
+    "fark": 252,
+    "tarih": "2021-05-15 22:10:59",
+    "kasiyer_devreden": "k2",
+    "kasiyer_devralan": "",
+    "varsa_not": "NOT:",
+    "islem_tur": "GUN SONU",
+    "web_kayit": 1,
+    "picc_stok": 983
   }, {
-    "ad": "",
-    "deger": ""
-  }, {
-    "ad": "Kart Yükleme TL",
-    "deger": null
-  }, {
-    "ad": "Deposit TL",
-    "deger": null
-  }, {
-    "ad": "Deposit İade TL",
-    "deger": null
-  }, {
-    "ad": "Kart Promasyon TL",
-    "deger": null
-  }, {
-    "ad": "Satılan Kart Sayısı(Adet)",
-    "deger": 0
-  }, {
-    "ad": "",
-    "deger": ""
-  }, {
-    "ad": "Ürün Satış TL",
-    "deger": null
-  }, {
-    "ad": "",
-    "deger": ""
+    "id": 16,
+    "firma_web_id": 46,
+    "toplam_satis": 0,
+    "toplam_islem": 115,
+    "toplam_ciro": 115,
+    "nakit_para_tutar": 250,
+    "kredi_karti_tutar": 35,
+    "banka_tutar": 0,
+    "masraf_tutar": 0,
+    "gunluk_kasa": 285,
+    "devreden_miktar": 250,
+    "fark": 0,
+    "tarih": "2021-05-16 20:34:10",
+    "kasiyer_devreden": "k2",
+    "kasiyer_devralan": "",
+    "varsa_not": "NOT:",
+    "islem_tur": "GUN SONU",
+    "web_kayit": 1,
+    "picc_stok": 983
   }]
-}];
+];
 
 const header = {
   host: '192.168.1.124:3000',

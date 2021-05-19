@@ -41,9 +41,18 @@ export default class DataService {
     return header;
   }
 
+    // const sorgu = {
+  //   tar1: tar1,
+  //   tar2: tar1,
+  //   user: userFirmaId, //'46',
+  // };
+
   async getAylikGunSonu(dataUser){
+
+    console.log('DaTA Srevis:', dataUser);
+
     const jsonData = JSON.stringify(dataUser);
-    // const res = await apiClient.post('/gunsonu/songunsonu', jsonData);
+    //const res = await apiClient.post('/gunsonu/songunsonu', jsonData);
     const res = await axios.post(URL + "/gunsonu", jsonData, {
       headers: this.authHeader(),
     }).catch(function (error) {
@@ -52,25 +61,20 @@ export default class DataService {
         //   console.log(error.response.status);
         console.log(error.response.headers);
       }
-      this.deleteLocalStorageData();
+     // this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
     });
 
 
-    localStorage.setItem('AylikGunSonu', JSON.stringify(res.data));
+     localStorage.setItem('AylikGunSonu', JSON.stringify(res.data));
+     //console.log('Data Service : ', res);
 
     // console.log('DaTA Srevis:', JSON.parse(localStorage.getItem('sonGunSonu')));
 
-    return res; //dönen veri  object tir.
+    return res.data; //dönen veri  object tir.
   }
-
-  // const sorgu = {
-  //   tar1: tar1,
-  //   tar2: tar1,
-  //   user: userFirmaId, //'46',
-  // };
 
   async getSonGunSonu(dataUser) {
     const jsonData = JSON.stringify(dataUser);
@@ -83,7 +87,7 @@ export default class DataService {
         //   console.log(error.response.status);
         console.log(error.response.headers);
       }
-      this.deleteLocalStorageData();
+     // this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -116,7 +120,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      this.deleteLocalStorageData();
+      //this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -136,7 +140,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      this.deleteLocalStorageData();
+     // this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
@@ -155,7 +159,7 @@ export default class DataService {
         console.log(error.response.headers);
 
       }
-      this.deleteLocalStorageData();
+      //this.deleteLocalStorageData();
       // window.location.href = "http://localhost:3000/";
       window.location.href = URL;
 
