@@ -113,10 +113,10 @@ export default class LoginSevice {
          });
 
       let localData = JSON.parse(res.data);
-      console.log("loginServis getFirmaDAta :", localData);
+    //  console.log("loginServis getFirmaDAta :", localData);
       localStorage.setItem("firma", JSON.stringify(localData));
 
-      console.log('Login Local :', localStorage.getItem("firma"));
+    //  console.log('Login Local :', localStorage.getItem("firma"));
       return res;
    }
 

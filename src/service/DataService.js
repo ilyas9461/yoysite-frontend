@@ -49,7 +49,7 @@ export default class DataService {
 
   async getAylikGunSonu(dataUser){
 
-    console.log('DaTA Srevis:', dataUser);
+    //console.log('DaTA Srevis:', dataUser);
 
     const jsonData = JSON.stringify(dataUser);
     //const res = await apiClient.post('/gunsonu/songunsonu', jsonData);

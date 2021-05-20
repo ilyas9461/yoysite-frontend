@@ -101,6 +101,9 @@ import '@fullcalendar/timegrid/main.min.css';
 import './assets/layout/layout.scss';
 import './assets/layout/flags/flags.css';
 
+// import excel from 'vue-excel-export';
+import VueExcelXlsx from "vue-excel-xlsx";
+
 router.beforeEach(function(to, from, next) {
     window.scrollTo(0, 0);
     next();
@@ -116,6 +119,7 @@ app.use(ToastService);
 
 app.use(router);
 app.use(store);
+app.use(VueExcelXlsx);
 
 app.directive('tooltip', Tooltip);
 app.directive('ripple', Ripple);
