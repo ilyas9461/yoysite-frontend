@@ -221,11 +221,13 @@ export default {
     function onClickAyrintiGunSonu(index) {
       //console.log("index:" + index);
       localStorage.setItem('ayrintiIndex',index)
+      localStorage.setItem('GunSonuTip','SonGunSonu');
       router.push({ name: "gunsonuayrinti", params: { index: index,tip:'SonGunSonu'}} );
     }
 
     function onClickAnlikGunSonuAyrinti(index){
       localStorage.setItem('ayrintiIndex',index)
+      localStorage.setItem('GunSonuTip','AnlikGunSonu');
       router.push({ name: "gunsonuayrinti", params: { index: index,tip:'AnlikGunSonu'}});
     }
 

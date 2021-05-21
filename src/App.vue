@@ -125,34 +125,34 @@ export default {
         { label: "Ana Sayfa", icon: "pi pi-fw pi-home", to: "/" },
         {
           label: "Listeler",
-          icon: "pi pi-fw pi-sitemap",
+          icon: "pi pi-fw pi-list",
           items: [
-            {
-              label: "Haftalık",
-              icon: "pi pi-fw pi-id-card",
-              // to: "/formlayout",
-               items:[
-                {
-                  label: "Gun Sonu",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/gunsonulistele",
+            // {
+            //   label: "Haftalık",
+            //   icon: "pi pi-fw pi-id-card",
+            //   // to: "/formlayout",
+            //    items:[
+            //     {
+            //       label: "Gun Sonu",
+            //       icon: "pi pi-fw pi-circle-off",
+            //       to: "/gunsonulistele",
 
-                },
-                {
-                  label: "Masraf",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/empty",
-                },
-                {
-                  label: "Banka/Elden",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/empty",
-                }
-              ]
-            },
+            //     },
+            //     {
+            //       label: "Masraf",
+            //       icon: "pi pi-fw pi-circle-off",
+            //       to: "/empty",
+            //     },
+            //     {
+            //       label: "Banka/Elden",
+            //       icon: "pi pi-fw pi-circle-off",
+            //       to: "/empty",
+            //     }
+            //   ]
+            // },
             { 
               label: "Aylık", 
-              icon: "pi pi-fw pi-check-square", 
+              icon: "pi pi-fw pi-moon", 
               // to: "/input" ,
               items:[
                 {
@@ -180,7 +180,7 @@ export default {
             },
             {
               label: "Tarih Aralıklı",
-              icon: "pi pi-fw pi-bookmark",
+              icon: "pi pi-fw pi-calendar-times",
               to: "/floatlabel",
 
             },

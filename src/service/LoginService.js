@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const URL='http://157.230.229.168:3000'; ////digital ocean ubuntu server
-//const URL = "http://localhost:3000";
+// const URL='http://157.230.229.168:3000'; ////digital ocean ubuntu server
+const URL = "http://localhost:3000";
 
 //const URL = 'http://192.168.1.124:3000';
 //const URL='/api';  ////vue.config.js dosyasındaki devServer,  proxy ayarlarında belirtilmiştir.
@@ -50,12 +50,17 @@ export default class LoginSevice {
    async getLoginData() {
       let user;
       try {
-         const response = await axios.get(URL + "/user/logined"); // Giriş yapan kullanıcı için üretilen token alınıyor.
+         const response = await axios.get(URL + "/user/logined")
+         .catch(function(err){
+            console.log(err);
+            token = localStorage.getItem("token");
+
+         }); // Giriş yapan kullanıcı için üretilen token alınıyor.
          // console.log('Login Service getLoginData(): ' + response.data);
 
          if (this.isEmptyObj(JSON.parse(response.data))) {
-            //console.log('Data yokk..');
-            token = localStorage.getItem("token");
+           // console.log('Data yokk..');          //boş token gelirse daha önce alınmış demektir.
+            token = localStorage.getItem("token"); // kayıtllı token i localStorage dan çek.
          } else token = response.data;
          // console.log('getLoginData(): ',JSON.parse(token));
 

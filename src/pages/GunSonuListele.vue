@@ -407,9 +407,8 @@ export default {
     const gunSonuData = ref();
     let gunSonuDataIndex = ref(0);
     const gunSonuTableData = ref();
-    // let gunSonuToplam=ref();
-
-    const dt = ref();
+   
+   const dt = ref();
     const exportCSV = () => {
       dt.value.exportCSV();
       //console.log("export dt value: ", dt);
@@ -421,7 +420,7 @@ export default {
 
     function getUserFirmaId() {
       const storeUser = computed(() => store.state.UserModule.user).value;
-      console.log(" getUserFirmaId() : ", storeUser);
+      //console.log(" getUserFirmaId() : ", storeUser);
       if (storeUser.firmaWebId !== null) return storeUser.firmaWebId;
     }
     function getUserFirmaAdi() {
@@ -434,7 +433,7 @@ export default {
         firmaAdi.push(element.firma_adi);
       });
 
-      console.log(" FirmaAdi : ", firmaAdi);
+      //console.log(" FirmaAdi : ", firmaAdi);
 
       if (storeUser.firma_adi !== null)
         // return storeUser[0].firma_adi;
@@ -482,7 +481,7 @@ export default {
       return sorgu;
     }
 
-    function onChange() {
+    function onChange() {  //drop down change
       gunSonuDataIndex = itemsDropDownIsletme.value.findIndex(
         x => x.name === selectedIsletme.value.name
       );
@@ -495,11 +494,15 @@ export default {
     const getAylikGunSonuTask = useTask(function*() {
       const result = yield dataService.getAylikGunSonu(sorgu);
       //console.log("Task :",result);
+
       gunSonuData.value = JSON.parse(result);
-      //  console.log("Task :" + gunSonuData.value[0]);
-      //gunSonuDataIndex=2;
+      console.log("Task :" + gunSonuData.value[0]);
+
+      if(gunSonuData.value===null || gunSonuData.value===undefined){
+        console.log("Hata : "+ "veri yok");
+      }
+
       gunSonuTableData.value = gunSonuData.value[0];
-      //aylikGunSonuToplam();
 
       //return JSON.parse(result);
     });
@@ -508,8 +511,8 @@ export default {
       let toplam = [0, 0, 0, 0, 0, 0, 0, 0, 0,0];
       let x = 0;
       let tar1, tar2;
-
-      gunSonuTableData.value.forEach(gunSonu => {
+      try {
+        gunSonuTableData.value.forEach(gunSonu => {
 
         toplam[0] += gunSonu.toplam_satis;
         toplam[1] += gunSonu.toplam_islem;
@@ -531,8 +534,6 @@ export default {
       tar2 = gunSonuTableData.value[x - 1].tarih.split(" ");
       tar1 = tar1[0].split("-");
       tar2 = tar2[0].split("-");
-
-      console.log(tar1, tar2);
 
       let retVal =[ {
         toplam_satis: toplam[0],
@@ -561,9 +562,19 @@ export default {
         web_kayit: 1
       }];
 
-      console.log("toplama :", retVal);
+      //console.log("toplama :", retVal);
 
       return retVal;
+        
+      } catch (error) {
+        console.log("Hata : ",error);
+        return null;
+      }
+      
+
+      //console.log(tar1, tar2);
+
+      
     }
 
     getAylikGunSonuTask.perform();
@@ -586,7 +597,7 @@ export default {
       itemsExportSplitButton,
       onChange,
       sorgu,
-      aylikGunSonuToplam
+      aylikGunSonuToplam,
     };
   } //setup
 };

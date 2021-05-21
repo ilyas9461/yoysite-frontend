@@ -10,7 +10,8 @@
         <div class="p-grid p-nogutter header">
           <div class="p-col-9" style="text-align: left">
             <div class="p-d-flex p-mb-1 p-text-bold">
-              <div class="view-header p-mr-1">{{ firmaData() }}</div>
+              <div class="view-header p-mr-1" v-if=" propsTip">Gun Sonu: {{ firmaData() }}</div>
+              <div class="view-header p-mr-1" v-else>Günlük Durum: {{ firmaData() }}</div>
               <div class="view-header p-mr-1">{{ kasiyer }}</div>
               <div class="view-header p-mr-1">{{ gunSonuTarih }}</div>
             </div>
@@ -94,7 +95,7 @@ export default {
   components: { GunSonuAyrintiDetay },
   props: {
     index: { type: String, default: "0" },
-    tip: { type: String, default: "SonGunSonu" },
+    tip: { type: String, default: localStorage.getItem('GunSonuTip')},
   },
   setup(props) {
     console.log("Ayrinti index :", props.index, props.tip);
@@ -109,7 +110,8 @@ export default {
     const gunSonuCiroAyrinti = ref();
     const gunSonuMasrafAyrinti = ref();
     const gunSonuBankaEldenAyrinti = ref();
-    // const toast = useToast();
+    const propsTip=ref();
+        // const toast = useToast();
     const op = ref();
 
     onMounted(() => {
@@ -262,7 +264,9 @@ export default {
           };
         }
         if (props.tip === "AnlikGunSonu") {
-          gunSonuTarih.value = value[valueIndex].anlikGunSonu.tarih;
+          let time=new Date().toLocaleTimeString();
+
+          gunSonuTarih.value = value[valueIndex].anlikGunSonu.tarih + " "+ time;
           kasiyer.value = value[valueIndex].anlikGunSonu.kasiyer;
           objGunSonu = {
             data: [
@@ -347,12 +351,14 @@ export default {
       let sorgu = {};
 
       if (props.tip === "SonGunSonu") {
+        propsTip.value=true;
         sorgu = {
           tar: getSonGunSonuTarih(),
           user: firma, //'46',
         };
       }
       if (props.tip === "AnlikGunSonu") {
+        propsTip.value=false;
         sorgu = {
           tar: anlikTarihSaat(),
           user: firma, //'46',
@@ -397,6 +403,7 @@ export default {
       getSonGunSonuDetayTask,
       ayrintiData,
       anlikTarihSaat,
+      propsTip,
       // toggle,
     };
   },
