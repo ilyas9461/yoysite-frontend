@@ -23,6 +23,11 @@ const routes = [
         component:() => import('./pages/GunSonuListele.vue')
     },
     {
+        path:'/gunsonutarihlistele',
+        name:'gunsonuTarihlistele',
+        component:() => import('./pages/GunSonuListeTarih')
+    },
+    {
         path: '/table',
         name: 'table',
         component: () => import('./components/TableDemo.vue'),

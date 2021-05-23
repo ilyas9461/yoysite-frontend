@@ -7,19 +7,25 @@
       :toggleable="true"
       :collapsed="fieldSetCollapse"
     >
-      <Fieldset :legend="anlikTarihSaat()" :toggleable="true">
+      <Fieldset
+        :legend="anlikTarihSaat()"
+        :toggleable="true"
+        v-if="firma.anlikGunSonu !== undefined"
+      >
         <div class="p-grid p-fluid dashboard">
           <div class="p-col-12 p-lg-4">
             <div class="card summary">
               <span class="title">Ciro :</span>
               <span class="detail">
                 <Button
-                 @click="onClickAnlikGunSonuAyrinti(index)"
+                  @click="onClickAnlikGunSonuAyrinti(index)"
                   icon="pi pi-ellipsis-h"
                   class="p-button-rounded p-button-secondary p-button-outlined"
                 />
               </span>
-              <span class="count visitors">{{ firma.anlikGunSonu.toplam_ciro }} TL</span>
+              <span class="count visitors"
+                >{{ firma.anlikGunSonu.toplam_ciro }} TL</span
+              >
             </div>
           </div>
           <div class="p-col-12 p-lg-4">
@@ -32,7 +38,9 @@
                   class="p-button-rounded p-button-secondary p-button-outlined"
                 />
               </span>
-              <span class="count purchases">{{ firma.anlikGunSonu.masraf_tutar}} TL</span>
+              <span class="count purchases"
+                >{{ firma.anlikGunSonu.masraf_tutar }} TL</span
+              >
             </div>
           </div>
           <div class="p-col-12 p-lg-4">
@@ -44,13 +52,19 @@
                   icon="pi pi-ellipsis-h"
                   class="p-button-rounded p-button-secondary p-button-outlined"
               /></span>
-              <span class="count revenue">{{ firma.anlikGunSonu.gunluk_kasa}} TL</span>
+              <span class="count revenue"
+                >{{ firma.anlikGunSonu.gunluk_kasa }} TL</span
+              >
             </div>
           </div>
         </div>
       </Fieldset>
       <!-- GUN SONU -->
-      <Fieldset :legend="'Son Gün Sonu : '+firma.sonGunSonu.tarih" :toggleable="true">
+      <Fieldset
+        :legend="'Son Gün Sonu : ' + firma.sonGunSonu.tarih"
+        :toggleable="true"
+        v-if="firma.sonGunSonu !== undefined"
+      >
         <div class="p-grid p-fluid dashboard">
           <div class="p-col-12 p-lg-4">
             <div class="card summary">
@@ -105,7 +119,7 @@
     </Fieldset>
   </div>
   <div class="card" style="text-align:center" v-else>
-    <span class="pi pi-spin pi-spinner" style="fontSize: 2.5rem"></span> 
+    <span class="pi pi-spin pi-spinner" style="fontSize: 2.5rem"></span>
     <span style="fontSize: 1.5rem"> Yükleniyor...</span>
   </div>
 </template>
@@ -125,20 +139,18 @@ export default {
     const gunSonu = ref(null);
     const firmaData = ref("YOY");
     const gunSonuTarih = ref("Gun Sonu");
-    const fieldSetCollapse=ref(false)
+    const fieldSetCollapse = ref(false);
 
     onBeforeUpdate(() => {
       gunSonu.value = gunSonuData();
-      if(gunSonu.value.length>1) fieldSetCollapse.value=true;
+      if (gunSonu.value.length > 1) fieldSetCollapse.value = true;
       //getFirmaDataTask.perform();
       firmaData.value = getFirmaData();
     });
 
-
     const dataService = new DataService();
 
-    const getSonGunSonuTask = useTask(function* () {
-      
+    const getSonGunSonuTask = useTask(function*() {
       // let datetime = new Date();
       // datetime.setDate(datetime.getDate() - 1);
       // datetime = datetime.toLocaleString();
@@ -158,7 +170,9 @@ export default {
 
       const result = yield dataService.getSonGunSonu(sorgu);
 
-      store.dispatch("DataModule/setGunSonu", JSON.parse(result.data)).then(() => {});
+      store
+        .dispatch("DataModule/setGunSonu", JSON.parse(result.data))
+        .then(() => {});
 
       // gunSonu.value = JSON.parse(result.data);
       //console.log("Task :" + JSON.parse(result.data));
@@ -167,28 +181,26 @@ export default {
 
     getSonGunSonuTask.perform().drop;
 
-    function anlikTarihSaat(){
+    function anlikTarihSaat() {
       let datetime = new Date();
-      datetime = datetime.toLocaleString();  //29.04.2021 09:25:17
+      datetime = datetime.toLocaleString(); //29.04.2021 09:25:17
       let tar1 = datetime.split(" ")[0];
-      let zaman= datetime.split(" ")[1];
+      let zaman = datetime.split(" ")[1];
 
       const [year, month, day] = [...tar1.split(".")];
-      tar1 = day + "-" + month + "-" + year;  // bu şekilde : "yyyy-mm-dd HH:MM:ss" şeklinde oluyor...
+      tar1 = day + "-" + month + "-" + year; // bu şekilde : "yyyy-mm-dd HH:MM:ss" şeklinde oluyor...
 
-      
-      return ('Günlük Durum : '+ tar1 +' '+zaman);
-
+      return "Günlük Durum : " + tar1 + " " + zaman;
     }
 
     function gunSonuData() {
       if (!getSonGunSonuTask.isRunning) {
         const value = computed(() => store.state.DataModule.sonGunSonu).value;
 
-      //  console.log("VALUE...:" + (value[0].sonGunSonu));
+        //  console.log("VALUE...:" + (value[0].sonGunSonu));
 
         if (value !== undefined || value !== null) {
-         // gunSonuTarih.value = "Gun Sonu : " + value.sonGunSonu.tarih;
+          // gunSonuTarih.value = "Gun Sonu : " + value.sonGunSonu.tarih;
           return value;
         }
       }
@@ -220,15 +232,21 @@ export default {
 
     function onClickAyrintiGunSonu(index) {
       //console.log("index:" + index);
-      localStorage.setItem('ayrintiIndex',index)
-      localStorage.setItem('GunSonuTip','SonGunSonu');
-      router.push({ name: "gunsonuayrinti", params: { index: index,tip:'SonGunSonu'}} );
+      localStorage.setItem("ayrintiIndex", index);
+      localStorage.setItem("GunSonuTip", "SonGunSonu");
+      router.push({
+        name: "gunsonuayrinti",
+        params: { index: index, tip: "SonGunSonu" },
+      });
     }
 
-    function onClickAnlikGunSonuAyrinti(index){
-      localStorage.setItem('ayrintiIndex',index)
-      localStorage.setItem('GunSonuTip','AnlikGunSonu');
-      router.push({ name: "gunsonuayrinti", params: { index: index,tip:'AnlikGunSonu'}});
+    function onClickAnlikGunSonuAyrinti(index) {
+      localStorage.setItem("ayrintiIndex", index);
+      localStorage.setItem("GunSonuTip", "AnlikGunSonu");
+      router.push({
+        name: "gunsonuayrinti",
+        params: { index: index, tip: "AnlikGunSonu" },
+      });
     }
 
     return {
@@ -242,7 +260,7 @@ export default {
       getFirmaData,
       firmaData,
       anlikTarihSaat,
-      fieldSetCollapse
+      fieldSetCollapse,
       // getFirmaDataTask,
     };
   },
@@ -250,12 +268,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-p-fieldset-legend{
+p-fieldset-legend {
   font-size: 2rem;
 }
- 
 </style>
-
-
-
-

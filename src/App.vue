@@ -181,7 +181,7 @@ export default {
             {
               label: "Tarih Aralıklı",
               icon: "pi pi-fw pi-calendar-times",
-              to: "/floatlabel",
+              to: "/gunsonutarihlistele",
 
             },
             // {
