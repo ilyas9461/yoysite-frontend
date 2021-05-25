@@ -167,4 +167,33 @@ export default class DataService {
     // console.log('DaTA Srevis:', res);
     return res; //dönen veri  object tir.
   }
+
+  async getTarihliListe(dataUser){
+
+    console.log('DaTA Srevis:', dataUser);
+
+    const jsonData = JSON.stringify(dataUser);
+    //const res = await apiClient.post('/gunsonu/songunsonu', jsonData);
+    const res = await axios.post(URL + "/gunsonu/tarihliliste", jsonData, {
+      headers: this.authHeader(),
+    }).catch(function (error) {
+      if (error.response) {
+        //   console.log('Error User: ',error.response.data);
+        //   console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+     // this.deleteLocalStorageData();
+      // window.location.href = "http://localhost:3000/";
+      window.location.href = URL;
+
+    });
+
+
+     localStorage.setItem('tarihli_liste', JSON.stringify(res.data));
+     console.log('Data Service : ', res);
+
+    // console.log('DaTA Srevis:', JSON.parse(localStorage.getItem('sonGunSonu')));
+
+    return res.data; //dönen veri  object tir.
+  }
 }

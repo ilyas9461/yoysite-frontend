@@ -32,7 +32,7 @@
               v-if="dt != null"
               :data="gunSonuTableData"
               :columns="dataTableColumns"
-              :filename="selectedIsletme.name"
+              :filename="baslik"
               :sheetname="'Sayfa1'"
             >
             </vue-excel-xlsx>
@@ -47,7 +47,7 @@
           :rows="10"
           responsiveLayout="scroll"
           :rowHover="true"
-          :exportFilename="selectedIsletme.name"
+          :exportFilename="baslik"
           v-if="!getAylikGunSonuTask.isRunning"
           :loading="getAylikGunSonuTask.isRunning"
         >
@@ -58,9 +58,7 @@
             Kayit bulunamadi !
           </template>
           <template #header>
-            <div
-              class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between"
-            >
+            <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
               <h5
                 class="p-mb-2 p-m-md-0 p-as-md-center"
                 style="font-weight:bold"
@@ -80,7 +78,7 @@
         <!-- toplamlar -->
         <div class="card">
           <DataTable
-            :value="aylikGunSonuToplam()"
+            :value="listeToplam()"
             selectionMode="single"
             :rows="2"
             responsiveLayout="scroll"
@@ -96,9 +94,7 @@
               Kayit bulunamadi !
             </template>
             <template #header>
-              <div
-                class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between"
-              >
+              <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
                 <h5
                   class="p-mb-2 p-m-md-0 p-as-md-center"
                   style="font-weight:bold"
@@ -139,7 +135,10 @@
                 </div>
                 <div class="p-field p-col-12 p-md-8">
                   <div class="p-field p-col-12 ">
-                    <label for="dateformat1" class="p-ml-2 p-text-bold">Tarih 1 :</label>
+                    <label
+                      for="dateformat1"
+                      class="p-ml-2 p-text-bold"
+                    >Tarih 1 :</label>
                     <Calendar
                       id="dateformat1"
                       v-model="tarih1"
@@ -149,7 +148,10 @@
                     />
                   </div>
                   <div class="p-field p-col-12 ">
-                     <label for="dateformat2" class="p-ml-2 p-text-bold">Tarih 2 :</label>
+                    <label
+                      for="dateformat2"
+                      class="p-ml-2 p-text-bold"
+                    >Tarih 2 :</label>
                     <Calendar
                       id="dateformat2"
                       v-model="tarih2"
@@ -157,7 +159,6 @@
                       placeholder="Tarih 2"
                       class="p-ml-2"
                     />
-
                   </div>
                 </div>
 
@@ -168,7 +169,7 @@
                       :options="itemsDropDownIslem"
                       optionLabel="name"
                       placeholder="İşlem Seç"
-                      @change="onChange()"
+                      @change="onChangeIslem()"
                       style="font-weight:bold;width:100%"
                     />
                   </div>
@@ -178,7 +179,7 @@
                       :options="itemsDropDownIsletme"
                       optionLabel="name"
                       placeholder="İşletme"
-                      @change="onChange()"
+                      @change="onChangeIsletme()"
                       style="font-weight:bold;width:100%"
                       required
                     />
@@ -196,7 +197,11 @@
               @click="closeNew"
             />
 
-            <Button icon="pi pi-check" label="Tamam" @click="baslikOlustur" />
+            <Button
+              icon="pi pi-check"
+              label="Tamam"
+              @click="getAylikGunSonuTask.perform()"
+            />
           </template>
         </Dialog>
 
@@ -219,7 +224,7 @@
           />
 
           <template #footer>
-            <Button
+            <!-- <Button
               icon="pi pi-times"
               label="İptal"
               class="p-button-secondary"
@@ -227,7 +232,11 @@
               @click="closeNew"
             />
 
-            <Button icon="pi pi-check" label="Tamam" @click="saveProduct" />
+            <Button
+              icon="pi pi-check"
+              label="Tamam"
+              @click="saveProduct"
+            /> -->
           </template>
         </Dialog>
       </div>
@@ -236,7 +245,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watchEffect } from "vue";
+import { ref, computed } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useTask } from "vue-concurrency";
 import DataService from "../service/DataService";
@@ -246,21 +255,9 @@ export default {
   setup() {
     const store = useStore();
     const toast = useToast();
-    const aylar = [
-      "Ocak",
-      "Şubat",
-      "Mart",
-      "Nisan",
-      "Mayıs",
-      "Haziran",
-      "Temmuz",
-      "Ağustos",
-      "Eylül",
-      "Ekim",
-      "Kasım",
-      "Aralık",
-    ];
+
     const excelComp = ref();
+
     const baslikAy = ref();
     const tarih1 = ref("...");
     const tarih2 = ref("...");
@@ -270,235 +267,47 @@ export default {
         label: "EXCEL-xlsx",
         icon: "pi pi-file-excel",
         command: () => {
-          toast.add({
-            severity: "success",
-            summary: "Excel ==> .xlsx",
-            detail: "Tablo verisi indiriliyor",
-            life: 3000,
-          });
-          excelComp.value.exportExcel();
-        },
+          if (gunSonuTableData.value.length !== 0) {
+            toast.add({
+              severity: "success",
+              summary: "Excel ==> .xlsx",
+              detail: "Tablo verisi indiriliyor",
+              life: 3000
+            });
+            excelComp.value.exportExcel(); //komponentin 'ref' özelliğinde tanımlı olmalı
+          }
+        }
       },
       {
         label: "EXCEL-csv",
         icon: "pi pi-file-excel",
         command: () => {
-          toast.add({
-            severity: "success",
-            summary: "Excel ==> .csv ",
-            detail: "Tablo verisi indiriliyor",
-            life: 3000,
-          });
-          exportCSV();
-        },
+          if (gunSonuTableData.value.length !== 0) {
+            toast.add({
+              severity: "success",
+              summary: "Excel ==> .csv ",
+              detail: "Tablo verisi indiriliyor",
+              life: 3000
+            });
+            exportCSV();
+          }
+        }
       },
       {
         label: "PDF",
         icon: "pi pi-file-pdf",
         command: () => {
-          toast.add({
-            severity: "success",
-            summary: "Pdf oluşturuldu",
-            detail: "Tablo verisi indiriliyor ???",
-            life: 3000,
-          });
-          //exportCSV();
-        },
-      },
-    ]);
-    const itemsSplitButon = ref([
-      {
-        label: "Ocak",
-        // icon: 'pi pi-refresh',
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[0] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[0];
-          sorgu = ayTarihOlustur(0);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Şubat",
-        // icon: 'pi pi-times',
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[1] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[1];
-          sorgu = ayTarihOlustur(1);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Mart",
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[2] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[2];
-          sorgu = ayTarihOlustur(2);
-          getAylikGunSonuTask.perform();
-        },
-        // icon: 'pi pi-external-link',
-        // command: () => {
-        // 	window.location.href = 'https://vuejs.org/'
-        // }
-      },
-      {
-        label: "Nisan",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[3] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[3];
-          sorgu = ayTarihOlustur(3);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Mayıs",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[4] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[4];
-          sorgu = ayTarihOlustur(4);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Haziran",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[5] + " Ayı",
-            detail: "Tablo verileri indiriliyor...",
-            life: 3000,
-          });
-          baslikAy.value = aylar[5];
-          sorgu = ayTarihOlustur(5);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Temmuz",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[6] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[6];
-          sorgu = ayTarihOlustur(6);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Ağustos",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[7] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[7];
-          sorgu = ayTarihOlustur(7);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Eylül",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[8] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[8];
-          sorgu = ayTarihOlustur(8);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Ekim",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[9] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[9];
-          sorgu = ayTarihOlustur(9);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Kasım",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[10] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[10];
-          sorgu = ayTarihOlustur(10);
-          getAylikGunSonuTask.perform();
-        },
-      },
-      {
-        label: "Aralık",
-        // icon: 'pi pi-upload',
-        //to: '/fileupload'
-        command: () => {
-          toast.add({
-            severity: "success",
-            summary: aylar[11] + " Ayı",
-            detail: "Veri oluşturuluyor",
-            life: 3000,
-          });
-          baslikAy.value = aylar[11];
-          sorgu = ayTarihOlustur(11);
-          getAylikGunSonuTask.perform();
-        },
-      },
+          if (gunSonuTableData.value.length !== 0) {
+            toast.add({
+              severity: "success",
+              summary: "Pdf oluşturuldu",
+              detail: "Tablo verisi indiriliyor ???",
+              life: 3000
+            });
+            //exportCSV();
+          }
+        }
+      }
     ]);
     const selectedIsletme = ref({ name: "..." });
     const itemsDropDownIsletme = ref([]);
@@ -506,10 +315,11 @@ export default {
     const itemsDropDownIslem = ref([
       { name: "Gun Sonu" },
       { name: "Masraf" },
-      { name: "Banka Elden" },
+      { name: "Banka Elden" }
     ]);
 
-    const dataTableColumns = [
+    const dataTableColumns = ref([]);
+    const dataTableColumnsGunSonu = [
       { field: "toplam_satis", header: "Satış", label: "Satış" }, //label tabloyu excel e aktarırken sutun başlıkları için
       { field: "toplam_islem", header: "İşlem", label: "İşlem" },
       { field: "toplam_ciro", header: "Ciro", label: "Ciro" },
@@ -522,33 +332,59 @@ export default {
       { field: "fark", header: "Fark", label: "Fark" },
       { field: "tarih", header: "Tarih", label: "Tarih" },
       { field: "kasiyer_devreden", header: "Kasiyer", label: "Kasiyer" },
-      { field: "varsa_not", header: "Not", label: "Not" },
+      { field: "varsa_not", header: "Not", label: "Not" }
+    ];
+    const dataTableColumnsMasraf = [
+      { field: "cikis_adi", header: "Çıkış Adı", label: "Çıkış Adı" }, //label tabloyu excel e aktarırken sutun başlıkları için
+      { field: "cesit", header: "Çıkış Çeşidi", label: "Çıkış Çeşidi" },
+      { field: "cikis_tutar", header: "Tutar", label: "Tutar" },
+      { field: "tarih_zaman", header: "Tarih", label: "Tarih" },
+      { field: "islem_not", header: "İşlem Not", label: "İşlem Not" }
+    ];
+    const dataTableColumnsBankaElden = [
+      { field: "cikis_adi", header: "Çıkış Adı", label: "Çıkış Adı" }, //label tabloyu excel e aktarırken sutun başlıkları için
+      { field: "cikis_tutar", header: "Tutar", label: "Tutar" },
+      { field: "banka_adi", header: "Banka Adı", label: "Banka Adı" },
+      { field: "tarih_zaman", header: "Tarih", label: "Tarih" },
+      { field: "islem_not", header: "İşlem Not", label: "İşlem Not" }
     ];
 
     const dataService = new DataService();
     const gunSonuData = ref();
-    let gunSonuDataIndex = ref(0);
-    const gunSonuTableData = ref();
+    let selectedDropDownIsletmeIndex = ref(0);
+    let selectedDropDownIslemIndex = ref(0);
+    const gunSonuTableData = ref([]);
     const openDialog = ref(false);
+
     const openDialogChart = ref(false);
+    const chartXaxisLabel = ref([]);
     const multiAxisData = ref({
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: chartXaxisLabel, //["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          label: "Dataset 1",
+          // 0. index
+          label: "Ciro",
           fill: false,
           borderColor: "#42A5F5",
           yAxisID: "y-axis-1",
-          data: [65, 59, 80, 81, 56, 55, 10],
+          data: [] //[65, 59, 80, 81, 56, 55, 10]
         },
         {
-          label: "Dataset 2",
+          // 1. index
+          label: "Masraf",
           fill: false,
           borderColor: "#00bb7e",
           yAxisID: "y-axis-2",
-          data: [28, 48, 40, 19, 86, 27, 90],
+          data: [] //[28, 48, 40, 19, 86, 27, 90]
         },
-      ],
+        {
+          label: "Banka Elden",
+          fill: false,
+          borderColor: "#000000",
+          yAxisID: "y-axis-3",
+          data: [] //[0, 4, 5, 19, 45, 14, 50]
+        }
+      ]
     });
     const multiAxisOptions = ref({
       responsive: true,
@@ -560,7 +396,7 @@ export default {
             type: "linear",
             display: true,
             position: "left",
-            id: "y-axis-1",
+            id: "y-axis-1"
           },
           {
             type: "linear",
@@ -568,11 +404,20 @@ export default {
             position: "right",
             id: "y-axis-2",
             gridLines: {
-              drawOnChartArea: false,
-            },
+              drawOnChartArea: false
+            }
           },
-        ],
-      },
+          {
+            type: "linear",
+            display: true,
+            position: "right",
+            id: "y-axis-3",
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }
+        ]
+      }
     });
 
     const dt = ref();
@@ -581,26 +426,19 @@ export default {
       //console.log("export dt value: ", dt);
     };
 
-    onMounted(() => {
-      //gunSonuData.value = gunSonu().data;
-    });
-
-    watchEffect(() => {
-      // console.log(tarih1.value);
-    });
-
     function getUserFirmaId() {
       const storeUser = computed(() => store.state.UserModule.user).value;
       //console.log(" getUserFirmaId() : ", storeUser);
       if (storeUser.firmaWebId !== null) return storeUser.firmaWebId;
     }
+
     function getUserFirmaAdi() {
       let firmaAdi = [];
       let storeUser = computed(() => store.state.UserModule.firma).value;
       storeUser = JSON.parse(storeUser.data);
       //console.log(" getUserFirmaAdi() : ", storeUser);
       //  console.log(" FirmaAdi : ", storeUser[0].firma_adi);
-      storeUser.forEach((element) => {
+      storeUser.forEach(element => {
         firmaAdi.push(element.firma_adi);
       });
 
@@ -611,139 +449,18 @@ export default {
         return firmaAdi;
     }
 
-    function ayTarihOlustur(ayArrIndex) {
-      let datetime = new Date();
-
-      datetime = datetime.toLocaleString();
-      // console.log(datetime); //17.05.2021 11:20:04
-      let tar1 = datetime.split(" ")[0];
-      let [day, month, year] = [...tar1.split(".")];
-
-      month = Number(ayArrIndex) + 1;
-      tar1 = year + "-" + month + "-" + "01"; ////"yyyy-mm-dd HH:MM:ss"
-      baslikAy.value = aylar[Number(month) - 1];
-
-      let tar2 = day;
-      let ay = (Number(month) + 1).toString();
-      if (ay <= "9") ay = "0" + ay;
-
-      tar2 = year + "-" + ay + "-" + "01";
-
-      let userFirmaId = getUserFirmaId(); // '46'
-      //console.log("local firma Id :", userFirmaId);
-
-      let isletmeAdi = getUserFirmaAdi();
-      itemsDropDownIsletme.value = [];
-      isletmeAdi.forEach((isletme) => {
-        let obj = { name: isletme };
-        itemsDropDownIsletme.value.push(obj);
-      });
-      // itemsDropDownIsletme.value = [{ name: isletmeAdi }];
-      //selectedIsletme.value = itemsDropDownIsletme.value[0];
-      // console.log( "selectedIsletme.value=",itemsDropDownIsletme.value[0].name);
-
-      const sorgu = {
-        tar1: tar1,
-        tar2: tar2,
-        user: userFirmaId, //'46',
-      };
-      //console.log('liste Local :',localStorage.getItem("firma"));
-      //console.log("getAylikGunSonuTask sorgu:", sorgu, year);
-      return sorgu;
-    }
-
-    function onChange() {
+    function onChangeIsletme() {
       //drop down change
-      gunSonuDataIndex = itemsDropDownIsletme.value.findIndex(
-        (x) => x.name === selectedIsletme.value.name
+      selectedDropDownIsletmeIndex = itemsDropDownIsletme.value.findIndex(
+        firma => firma.name === selectedIsletme.value.name
       );
       //console.log("chnsge value, index:",selectedIsletme.value.name, gunSonuDataIndex);
-      gunSonuTableData.value = gunSonuData.value[gunSonuDataIndex];
+      //gunSonuTableData.value = gunSonuData.value[gunSonuDataIndex];
     }
-
-    let sorgu = ayTarihOlustur(new Date().getMonth());
-
-    const getAylikGunSonuTask = useTask(function*() {
-      const result = yield dataService.getAylikGunSonu(sorgu);
-      //console.log("Task :",result);
-
-      gunSonuData.value = JSON.parse(result);
-      console.log("Task :" + gunSonuData.value[0]);
-
-      if (gunSonuData.value === null || gunSonuData.value === undefined) {
-        console.log("Hata : " + "veri yok");
-      }
-
-      gunSonuTableData.value = gunSonuData.value[0];
-
-      //return JSON.parse(result);
-    });
-
-    function aylikGunSonuToplam() {
-      let toplam = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      let x = 0;
-      let tar1, tar2;
-      try {
-        gunSonuTableData.value.forEach((gunSonu) => {
-          toplam[0] += gunSonu.toplam_satis;
-          toplam[1] += gunSonu.toplam_islem;
-          toplam[2] += gunSonu.toplam_ciro;
-
-          toplam[3] += gunSonu.nakit_para_tutar;
-          toplam[4] += gunSonu.kredi_karti_tutar;
-          toplam[5] += gunSonu.banka_tutar;
-
-          toplam[6] += gunSonu.masraf_tutar;
-          toplam[7] += gunSonu.gunluk_kasa;
-          toplam[8] += gunSonu.devreden_miktar;
-
-          toplam[9] += gunSonu.fark;
-          x++;
-        });
-
-        tar1 = gunSonuTableData.value[0].tarih.split(" ");
-        tar2 = gunSonuTableData.value[x - 1].tarih.split(" ");
-        tar1 = tar1[0].split("-");
-        tar2 = tar2[0].split("-");
-
-        let retVal = [
-          {
-            toplam_satis: toplam[0],
-            toplam_islem: toplam[1],
-            toplam_ciro: toplam[2],
-
-            nakit_para_tutar: toplam[3],
-            kredi_karti_tutar: toplam[4],
-            banka_tutar: toplam[5],
-
-            masraf_tutar: toplam[6],
-            gunluk_kasa: toplam[7],
-            devreden_miktar: toplam[8],
-
-            fark: toplam[9],
-
-            tarih: tar1[0] + "." + tar1[1] + "." + tar1[2] + "-" + tar2[2],
-
-            id: 14,
-            firma_web_id: "",
-            islem_tur: "GUN SONU",
-            kasiyer_devralan: "...",
-            kasiyer_devreden: "...",
-            picc_stok: "",
-            varsa_not: "...",
-            web_kayit: 1,
-          },
-        ];
-
-        //console.log("toplama :", retVal);
-
-        return retVal;
-      } catch (error) {
-        console.log("Hata : ", error);
-        return null;
-      }
-
-      //console.log(tar1, tar2);
+    function onChangeIslem() {
+      selectedDropDownIslemIndex = itemsDropDownIslem.value.findIndex(
+        islem => islem.name === selectedIslem.value.name
+      );
     }
 
     const openNew = () => {
@@ -760,10 +477,12 @@ export default {
     };
     const baslikOlustur = () => {
       let tar1 = new Date(tarih1.value);
-       let tar2 = new Date(tarih2.value);
-      if ((tarih1.value !== "..." && tarih2.value !== "...") && (tar2.getTime()>tar1.getTime())) {
-        
-
+      let tar2 = new Date(tarih2.value);
+      if (
+        tarih1.value !== "..." &&
+        tarih2.value !== "..." &&
+        tar2.getTime() > tar1.getTime()
+      ) {
         tar1 = tar1.toLocaleString().split(" ")[0];
         tar2 = tar2.toLocaleString().split(" ")[0];
 
@@ -780,18 +499,36 @@ export default {
             " " +
             selectedIslem.value.name;
 
-          tarih1.value="...";
+          tarih1.value = "...";
           tarih2.value = "...";
-          selectedIsletme.value=[];
-          selectedIslem.value=[];
+          selectedIsletme.value = [];
+          selectedIslem.value = [];
 
+          let userFirmaId = getUserFirmaId().split(",")[
+            selectedDropDownIsletmeIndex
+          ]; // '46'
+          //console.log("firma : ", userFirmaId);
+          let [day, month, year] = [...tar1.split(".")];
+          tar1 = year + "-" + month + "-" + day;
+          [day, month, year] = [...tar2.split(".")];
+          tar2 = year + "-" + month + "-" + day;
+          let islem = itemsDropDownIslem.value[selectedDropDownIslemIndex].name;
+
+          let sorguListe = {
+            firma: userFirmaId,
+            tar1: tar1,
+            tar2: tar2,
+            islem: islem
+          };
+          // console.log("sorgu Liste :", sorguListe);
           closeNew();
+          return sorguListe;
         } else {
           toast.add({
             severity: "error",
             summary: "Eksik veri girişi...",
             detail: "Eksik alan...",
-            life: 3000,
+            life: 3000
           });
         }
       } else {
@@ -799,34 +536,249 @@ export default {
           severity: "error",
           summary: "Eksik veya yanlış giriş...",
           detail: "Eksik alan veya 'Tarih 2 > Tarih 1' olmalı.",
-          life: 3000,
+          life: 3000
         });
       }
 
       // console.log('Baslik :', baslik);
     };
 
-    getAylikGunSonuTask.perform();
+    function getIstemeAdi() {
+      let isletmeAdi = getUserFirmaAdi();
+      itemsDropDownIsletme.value = [];
+      isletmeAdi.forEach(isletme => {
+        let obj = { name: isletme };
+        itemsDropDownIsletme.value.push(obj);
+      });
+    }
+
+    function gunSonuToplam() {
+      let toplam = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let x = 0;
+      let tar1, tar2;
+
+      multiAxisData.value.datasets[0].data = [];
+      multiAxisData.value.datasets[1].data = [];
+      multiAxisData.value.datasets[2].data = [];
+      chartXaxisLabel.value=[];
+
+      try {
+        gunSonuTableData.value.forEach(gunSonu => {
+          toplam[0] += gunSonu.toplam_satis;
+          toplam[1] += gunSonu.toplam_islem;
+          toplam[2] += gunSonu.toplam_ciro;
+
+          toplam[3] += gunSonu.nakit_para_tutar;
+          toplam[4] += gunSonu.kredi_karti_tutar;
+          toplam[5] += gunSonu.banka_tutar;
+
+          toplam[6] += gunSonu.masraf_tutar;
+          toplam[7] += gunSonu.gunluk_kasa;
+          toplam[8] += gunSonu.devreden_miktar;
+
+          toplam[9] += gunSonu.fark;
+
+          multiAxisData.value.datasets[0].data.push(gunSonu.toplam_ciro);
+          multiAxisData.value.datasets[1].data.push(gunSonu.masraf_tutar);
+          multiAxisData.value.datasets[2].data.push(gunSonu.banka_tutar);
+          chartXaxisLabel.value.push(gunSonu.tarih.split(" ")[0]);
+          x++;
+        });
+
+        tar1 = gunSonuTableData.value[0].tarih;
+        tar2 = gunSonuTableData.value[x - 1].tarih;
+        let retVal = [
+          {
+            toplam_satis: toplam[0],
+            toplam_islem: toplam[1],
+            toplam_ciro: toplam[2],
+
+            nakit_para_tutar: toplam[3],
+            kredi_karti_tutar: toplam[4],
+            banka_tutar: toplam[5],
+
+            masraf_tutar: toplam[6],
+            gunluk_kasa: toplam[7],
+            devreden_miktar: toplam[8],
+
+            fark: toplam[9],
+
+            tarih: tar1 + " => " + tar2,
+
+            id: 14,
+            firma_web_id: "",
+            islem_tur: "GUN SONU",
+            kasiyer_devralan: "...",
+            kasiyer_devreden: "...",
+            picc_stok: "",
+            varsa_not: "...",
+            web_kayit: 1
+          }
+        ];
+
+        // console.log("toplama :",  chartXaxisLabel.value);
+
+        return retVal;
+      } catch (error) {
+        console.log("Hata : ", error);
+        return null;
+      }
+
+      //console.log(tar1, tar2);
+    }
+
+    function masrafToplam() {
+      let toplam = 0;
+      let x = 0;
+      let tar1, tar2;
+      multiAxisData.value.datasets[0].data = [];
+      multiAxisData.value.datasets[1].data = [];
+      multiAxisData.value.datasets[2].data = [];
+      chartXaxisLabel.value=[];
+      try {
+        gunSonuTableData.value.forEach(gunSonu => {
+          toplam += gunSonu.cikis_tutar;
+          multiAxisData.value.datasets[1].data.push(gunSonu.cikis_tutar);
+          chartXaxisLabel.value.push(gunSonu.tarih_zaman.split(" ")[0]);
+
+          x++;
+        });
+        tar1 = gunSonuTableData.value[0].tarih_zaman;
+        tar2 = gunSonuTableData.value[x - 1].tarih_zaman;
+        //tar1 = tar1[0].split("-");
+        //tar2 = tar2[0].split("-");
+
+        let retVal = [
+          {
+            cikis_adi: "...",
+            cesit: "...",
+            cikis_tutar: toplam,
+            tarih_zaman: tar1 + " => " + tar2,
+            islem_not: "..."
+          }
+        ];
+        //console.log("toplama :", retVal);
+
+        return retVal;
+      } catch (error) {
+        console.log("Hata : ", error);
+        return null;
+      }
+    }
+
+    function bankaEldenToplam() {
+      let toplam = 0;
+      let x = 0;
+      let tar1, tar2;
+      multiAxisData.value.datasets[0].data = [];
+      multiAxisData.value.datasets[1].data = [];
+      multiAxisData.value.datasets[2].data = [];
+      chartXaxisLabel.value=[];
+
+      try {
+        gunSonuTableData.value.forEach(gunSonu => {
+          toplam += gunSonu.cikis_tutar;
+
+          multiAxisData.value.datasets[2].data.push(gunSonu.cikis_tutar);
+          chartXaxisLabel.value.push(gunSonu.tarih_zaman.split(" ")[0]);
+          x++;
+        });
+        tar1 = gunSonuTableData.value[0].tarih_zaman;
+        tar2 = gunSonuTableData.value[x - 1].tarih_zaman;
+        //tar1 = tar1[0].split("-");
+        //tar2 = tar2[0].split("-");
+
+        let retVal = [
+          {
+            cikis_adi: "...",
+            cikis_tutar: toplam,
+            banka_adi: "...",
+            tarih_zaman: tar1 + " => " + tar2,
+            islem_not: "..."
+          }
+        ];
+        //console.log("toplama :", retVal);
+
+        return retVal;
+      } catch (error) {
+        console.log("Hata : ", error);
+        return null;
+      }
+    }
+
+    function listeToplam() {
+      switch (sorgu.islem) {
+        case "Gun Sonu":
+          return gunSonuToplam();
+        case "Masraf":
+          return masrafToplam();
+        case "Banka Elden":
+          return bankaEldenToplam();
+        default:
+          break;
+      }
+    }
+
+    getIstemeAdi();
+
+    let sorgu = {};
+
+    const getAylikGunSonuTask = useTask(function*() {
+      sorgu = baslikOlustur();
+      dataTableColumns.value = [];
+      switch (sorgu.islem) {
+        case "Gun Sonu":
+          dataTableColumns.value = dataTableColumnsGunSonu;
+          break;
+        case "Masraf":
+          dataTableColumns.value = dataTableColumnsMasraf;
+          break;
+        case "Banka Elden":
+          dataTableColumns.value = dataTableColumnsBankaElden;
+          break;
+      }
+
+      const result = yield dataService.getTarihliListe(sorgu);
+      //console.log("Task :",result);
+
+      gunSonuData.value = JSON.parse(result);
+
+      //console.log("Task :" + gunSonuData.value);
+
+      // if (gunSonuData.value === null || gunSonuData.value === undefined) {
+      //   console.log("Hata : " + "veri yok");
+      // }
+
+      gunSonuTableData.value = gunSonuData.value;
+
+      //return JSON.parse(result);
+    });
+
+    // getAylikGunSonuTask.perform();
 
     return {
       toast,
-      itemsSplitButon,
       selectedIsletme,
       itemsDropDownIsletme,
+      selectedDropDownIsletmeIndex,
+      selectedDropDownIslemIndex,
       gunSonuData,
       gunSonuTableData,
-      gunSonuDataIndex,
       getAylikGunSonuTask,
       baslikAy,
       getUserFirmaAdi,
       exportCSV,
       dt,
       dataTableColumns,
+      dataTableColumnsGunSonu,
+      dataTableColumnsMasraf,
+      dataTableColumnsBankaElden,
       excelComp,
       itemsExportSplitButton,
-      onChange,
+      onChangeIsletme,
+      onChangeIslem,
       sorgu,
-      aylikGunSonuToplam,
+      listeToplam,
       openDialog,
       openNew,
       closeNew,
@@ -835,14 +787,16 @@ export default {
       openDialogChart,
       openChart,
       closeChart,
+      chartXaxisLabel,
       multiAxisData,
       multiAxisOptions,
       tarih1,
       tarih2,
       baslikOlustur,
       baslik,
+      getIstemeAdi
     };
-  }, //setup
+  } //setup
 };
 </script>
 
