@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const URL='http://157.230.229.168:3000'; ////digital ocean ubuntu server
-// const URL = "http://localhost:3000";
+// const URL='http://157.230.229.168:3000'; ////digital ocean ubuntu server
+const URL = "http://localhost:3000";
 
 //const URL = 'http://192.168.1.124:3000';
 //const URL='/api';  ////vue.config.js dosyasındaki devServer,  proxy ayarlarında belirtilmiştir.

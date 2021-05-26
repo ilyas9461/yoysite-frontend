@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const URL='http://157.230.229.168:3000'; //digital ocean ubuntu server
-// const URL='http://localhost:3000';
+// const URL='http://157.230.229.168:3000'; //digital ocean ubuntu server
+const URL='http://localhost:3000';
 
 //const URL = "http://192.168.1.124:3000";
 //const URL='/api';  //vue.config.js dosyasındaki devServer,  proxy ayarlarında belirtilmiştir.
@@ -170,7 +170,7 @@ export default class DataService {
 
   async getTarihliListe(dataUser){
 
-    console.log('DaTA Srevis:', dataUser);
+    //console.log('DaTA Srevis:', dataUser);
 
     const jsonData = JSON.stringify(dataUser);
     //const res = await apiClient.post('/gunsonu/songunsonu', jsonData);
@@ -190,7 +190,7 @@ export default class DataService {
 
 
      localStorage.setItem('tarihli_liste', JSON.stringify(res.data));
-     console.log('Data Service : ', res);
+    // console.log('Data Service : ', res);
 
     // console.log('DaTA Srevis:', JSON.parse(localStorage.getItem('sonGunSonu')));
 

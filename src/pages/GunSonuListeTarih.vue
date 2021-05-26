@@ -38,81 +38,85 @@
             </vue-excel-xlsx>
           </template>
         </Toolbar>
-        <!-- gunSonuData[gunSonuDataIndex] -->
-        <DataTable
-          ref="dt"
-          :value="gunSonuTableData"
-          selectionMode="single"
-          :paginator="true"
-          :rows="10"
-          responsiveLayout="scroll"
-          :rowHover="true"
-          :exportFilename="baslik"
-          v-if="!getAylikGunSonuTask.isRunning"
-          :loading="getAylikGunSonuTask.isRunning"
-        >
-          <template #loading>
-            Yükleniyor ...
-          </template>
-          <template #empty>
-            Kayit bulunamadi !
-          </template>
-          <template #header>
-            <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-              <h5
-                class="p-mb-2 p-m-md-0 p-as-md-center"
-                style="font-weight:bold"
-              >
-                {{ baslik }} Listesi
-              </h5>
-            </div>
-          </template>
-          <Column
-            v-for="col of dataTableColumns"
-            :field="col.field"
-            :header="col.header"
-            :key="col.field"
-            headerStyle="font-weight:bold;"
-          ></Column>
-        </DataTable>
-        <!-- toplamlar -->
-        <div class="card">
-          <DataTable
-            :value="listeToplam()"
-            selectionMode="single"
-            :rows="2"
-            responsiveLayout="scroll"
-            :rowHover="true"
-            v-if="!getAylikGunSonuTask.isRunning"
-            :loading="getAylikGunSonuTask.isRunning"
-            style="width=100%"
-          >
-            <template #loading>
-              Yükleniyor ...
-            </template>
-            <template #empty>
-              Kayit bulunamadi !
-            </template>
-            <template #header>
-              <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-                <h5
-                  class="p-mb-2 p-m-md-0 p-as-md-center"
-                  style="font-weight:bold"
-                >
-                  {{ baslik }} Listesi Toplamlar
-                </h5>
-              </div>
-            </template>
-            <Column
-              v-for="col of dataTableColumns"
-              :field="col.field"
-              :header="col.header"
-              :key="col.field"
-              headerStyle="font-weight:bold;"
-              style="font-weight:bold;"
-            ></Column>
-          </DataTable>
+        <div v-if="isdataTableData">
+          <div>
+            <DataTable
+              ref="dt"
+              :value="gunSonuTableData"
+              selectionMode="single"
+              :paginator="true"
+              :rows="10"
+              responsiveLayout="scroll"
+              :rowHover="true"
+              :exportFilename="baslik"
+              :loading="getAylikGunSonuTask.isRunning"
+            >
+              <template #loading>
+                Yükleniyor ...
+              </template>
+              <template #empty>
+                Kayit bulunamadi !
+              </template>
+              <template #header>
+                <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+                  <h5
+                    class="p-mb-2 p-m-md-0 p-as-md-center"
+                    style="font-weight:bold"
+                  >
+                    {{ baslik }} Listesi
+                  </h5>
+                </div>
+              </template>
+              <Column
+                v-for="col of dataTableColumns"
+                :field="col.field"
+                :header="col.header"
+                :key="col.field"
+                headerStyle="font-weight:bold;"
+              ></Column>
+            </DataTable>
+          </div>
+          <!-- toplamlar -->
+          <div class="card">
+            <DataTable
+              :value="listeToplam()"
+              selectionMode="single"
+              :rows="2"
+              responsiveLayout="scroll"
+              :rowHover="true"
+              :loading="getAylikGunSonuTask.isRunning"
+              style="width=100%"
+            >
+              <!-- v-if="!getAylikGunSonuTask.isRunning" -->
+              <template #loading>
+                Yükleniyor ...
+              </template>
+              <template #empty>
+                Kayit bulunamadi !
+              </template>
+              <template #header>
+                <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+                  <h5
+                    class="p-mb-2 p-m-md-0 p-as-md-center"
+                    style="font-weight:bold"
+                  >
+                    {{ baslik }} Listesi Toplamlar
+                  </h5>
+                </div>
+              </template>
+              <Column
+                v-for="col of dataTableColumns"
+                :field="col.field"
+                :header="col.header"
+                :key="col.field"
+                headerStyle="font-weight:bold;"
+                style="font-weight:bold;"
+              ></Column>
+            </DataTable>
+          </div>
+
         </div>
+
         <!-- form dialog -->
         <Dialog
           v-model:visible="openDialog"
@@ -317,6 +321,8 @@ export default {
       { name: "Masraf" },
       { name: "Banka Elden" }
     ]);
+
+    const isdataTableData = ref(false);
 
     const dataTableColumns = ref([]);
     const dataTableColumnsGunSonu = [
@@ -551,8 +557,8 @@ export default {
         itemsDropDownIsletme.value.push(obj);
       });
     }
-
-    function gunSonuToplam() {
+    
+   function gunSonuToplam() {
       let toplam = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       let x = 0;
       let tar1, tar2;
@@ -560,7 +566,7 @@ export default {
       multiAxisData.value.datasets[0].data = [];
       multiAxisData.value.datasets[1].data = [];
       multiAxisData.value.datasets[2].data = [];
-      chartXaxisLabel.value=[];
+      chartXaxisLabel.value = [];
 
       try {
         gunSonuTableData.value.forEach(gunSonu => {
@@ -634,7 +640,7 @@ export default {
       multiAxisData.value.datasets[0].data = [];
       multiAxisData.value.datasets[1].data = [];
       multiAxisData.value.datasets[2].data = [];
-      chartXaxisLabel.value=[];
+      chartXaxisLabel.value = [];
       try {
         gunSonuTableData.value.forEach(gunSonu => {
           toplam += gunSonu.cikis_tutar;
@@ -673,7 +679,7 @@ export default {
       multiAxisData.value.datasets[0].data = [];
       multiAxisData.value.datasets[1].data = [];
       multiAxisData.value.datasets[2].data = [];
-      chartXaxisLabel.value=[];
+      chartXaxisLabel.value = [];
 
       try {
         gunSonuTableData.value.forEach(gunSonu => {
@@ -705,6 +711,7 @@ export default {
         return null;
       }
     }
+ 
 
     function listeToplam() {
       switch (sorgu.islem) {
@@ -724,7 +731,9 @@ export default {
     let sorgu = {};
 
     const getAylikGunSonuTask = useTask(function*() {
+      
       sorgu = baslikOlustur();
+
       dataTableColumns.value = [];
       switch (sorgu.islem) {
         case "Gun Sonu":
@@ -751,6 +760,8 @@ export default {
 
       gunSonuTableData.value = gunSonuData.value;
 
+      isdataTableData.value = true;
+
       //return JSON.parse(result);
     });
 
@@ -769,6 +780,7 @@ export default {
       getUserFirmaAdi,
       exportCSV,
       dt,
+      isdataTableData,
       dataTableColumns,
       dataTableColumnsGunSonu,
       dataTableColumnsMasraf,
