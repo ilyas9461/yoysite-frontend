@@ -4,15 +4,19 @@
       <span class="pi pi-bars"></span>
     </button>
     <div class="layout-topbar-icons">
-      <button class="p-link" @click="onClicAylikGunSonuListe">
+      <button class="p-link" @click="onClickTarihAralikliListe">
         <span class="layout-topbar-item-text">List</span>
-        <span class="layout-topbar-icon pi pi pi-list"></span>
+        <span class="layout-topbar-icon pi pi-fw pi-calendar-times"></span>
       </button>
-      <button class="p-link">
+      <button class="p-link" @click="onClickAylikGunSonuListe">
+        <span class="layout-topbar-item-text">List</span>
+        <span class="layout-topbar-icon pi pi pi-fw pi-moon"></span>
+      </button>
+      <!-- <button class="p-link">
         <span class="layout-topbar-item-text">Events</span>
         <span class="layout-topbar-icon pi pi-calendar"></span>
         <span class="layout-topbar-badge">15</span>
-      </button>
+      </button> -->
       <button class="p-link">
         <span class="layout-topbar-item-text">Settings</span>
         <span class="layout-topbar-icon pi pi-cog"></span>
@@ -42,8 +46,12 @@ export default {
       //console.log('Logout....clik');
       event.preventDefault();
     },
-    onClicAylikGunSonuListe(event){
+    onClickAylikGunSonuListe(event){
       router.push({ name: "gunsonulistele"});
+      event.preventDefault();
+    },
+    onClickTarihAralikliListe(event){
+      router.push({ name: "gunsonuTarihlistele"});
       event.preventDefault();
     },
   },

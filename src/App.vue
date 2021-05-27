@@ -153,30 +153,31 @@ export default {
             { 
               label: "Aylık", 
               icon: "pi pi-fw pi-moon", 
+              to: "/gunsonulistele"
               // to: "/input" ,
-              items:[
-                {
-                  label: "Gun Sonu",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/gunsonulistele",
+              // items:[
+              //   {
+              //     label: "Gun Sonu",
+              //     icon: "pi pi-fw pi-circle-off",
+              //     to: "/gunsonulistele",
 
-                },
-                {
-                  label: "Masraf",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/empty",
-                },
-                {
-                  label: "Banka/Elden",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/empty",
-                },
-                {
-                  label: "Misafir Sayısı",
-                  icon: "pi pi-fw pi-circle-off",
-                  to: "/empty",
-                }
-              ]
+              //   },
+              //   {
+              //     label: "Masraf",
+              //     icon: "pi pi-fw pi-circle-off",
+              //     to: "/empty",
+              //   },
+              //   {
+              //     label: "Banka/Elden",
+              //     icon: "pi pi-fw pi-circle-off",
+              //     to: "/empty",
+              //   },
+              //   {
+              //     label: "Misafir Sayısı",
+              //     icon: "pi pi-fw pi-circle-off",
+              //     to: "/empty",
+              //   }
+              // ]
             },
             {
               label: "Tarih Aralıklı",

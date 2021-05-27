@@ -79,7 +79,7 @@
                     label="İptal"
                     icon="pi pi-times"
                     class="p-button-raised p-button-text p-button-plain p-text-bold"
-                    @click="onClickTamam()"
+                    @click="onClickIptal()"
                   />
                 </div>
               </div>
@@ -99,7 +99,7 @@
               v-if="dt != null"
               :data="gunSonuTableData"
               :columns="dataTableColumns"
-              :filename="selectedIsletme.name"
+              :filename="baslik"
               :sheetname="'Sayfa1'"
             >
             </vue-excel-xlsx>
@@ -130,7 +130,7 @@
                 class="p-mb-2 p-m-md-0 p-as-md-center"
                 style="font-weight:bold"
               >
-                {{ selectedIsletme.name }} {{ baslikAy }} Ayı {{selectedIslem.name}} Listesi
+                {{baslik}} Listesi
               </h5>
             </div>
           </template>
@@ -166,7 +166,7 @@
                   class="p-mb-2 p-m-md-0 p-as-md-center"
                   style="font-weight:bold"
                 >
-                  {{ selectedIsletme.name }} {{ baslikAy }} {{selectedIslem.name}} Aylık Toplamlar
+                  {{baslik}} Aylık Toplamlar
                 </h5>
               </div>
             </template>
@@ -392,14 +392,25 @@ export default {
 
     const overlayOn = ref(false);
     const op = ref();
+    const baslik=ref('...');
+    const oldBaslik=ref('...');
+
     const toggle = event => {
+      
       if (!overlayOn.value) {
         selectedIsletme.value = {};
         selectedIslem.value = {};
         overlayOn.value = true;
+        oldBaslik.value=baslik.value;
       }
 
       op.value.toggle(event);
+    };
+
+    const onClickIptal=() =>{
+       toggle();
+        overlayOn.value = false;
+        baslik.value=oldBaslik.value;
     };
 
     const onClickTamam = () => {
@@ -415,6 +426,7 @@ export default {
         });
       } else {
         getAylikGunSonuTask.perform();
+        baslik.value=`${selectedIsletme.value.name} ${baslikAy.value} ${selectedIslem.value.name}`;
         toggle();
         overlayOn.value = false;
       }
@@ -510,7 +522,7 @@ export default {
       //selectedIsletme.value = itemsDropDownIsletme.value[0];
       if (!firstRun.value) {
         selectedIsletme.value = itemsDropDownIsletme.value[0];
-
+        baslik.value=`${selectedIsletme.value.name} ${baslikAy.value} ${selectedIslem.value.name}`;
         if (userFirmaId.length > 1) {
           firma = userFirmaId.split(",")[0];
         } else {
@@ -776,8 +788,10 @@ export default {
       aySlider,
       aylar,
       onClickTamam,
+      onClickIptal,
       firstRun,
-      overlayOn
+      overlayOn,
+      baslik,oldBaslik
     };
   } //setup
 };
