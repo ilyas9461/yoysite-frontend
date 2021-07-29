@@ -2,7 +2,7 @@
 Front-end web pages that display various information about the administration of a Playground.
 This information can be seen by the investor instantly, daily, monthly and with date intervals.
 The system was developed with Vue 3 Framework in Dashboard structure.
-The system was developed with Vue 3 Framework in Dashboard structure.
+In addition, many parameters such as price, promotion updates related to the playground can be adjusted.
 
 ## Project setup
 ```
