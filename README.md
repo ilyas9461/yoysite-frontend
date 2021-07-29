@@ -4,6 +4,10 @@ This information can be seen by the investor instantly, daily, monthly and with 
 The system was developed with Vue 3 Framework in Dashboard structure.
 In addition, many parameters such as price, promotion updates related to the playground can be adjusted.
 
+This work is the front-end part of the Playground Management System Project.
+
+[Playground Management System Project](https://github.com/ilyas9461/yoy-yon-sistemi)
+
 ## Project setup
 ```
 npm install
